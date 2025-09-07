@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Search, ShoppingCart, User, Menu, X, Heart } from 'lucide-react';
+import LoginSignup from './LoginSignup';
 import { useCart } from '../context/CartContext';
 
 interface NavbarProps {
@@ -10,6 +11,8 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ onCategorySelect, currentPage }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
   const { itemCount } = useCart();
 
   const categories = [
@@ -47,6 +50,9 @@ const Navbar: React.FC<NavbarProps> = ({ onCategorySelect, currentPage }) => {
             </div>
           </div>
 
+          {/* Login/Signup Modal */}
+          <LoginSignup open={isAuthOpen} onClose={() => setIsAuthOpen(false)} initialMode={authMode} />
+
           {/* Search Bar - Desktop */}
           <div className="hidden md:flex flex-1 max-w-lg mx-8">
             <div className="relative w-full">
@@ -63,10 +69,22 @@ const Navbar: React.FC<NavbarProps> = ({ onCategorySelect, currentPage }) => {
 
           {/* Right Side Icons */}
           <div className="flex items-center space-x-4">
-            {/* Profile */}
-            <button className="hidden md:flex items-center space-x-1 text-gray-700 hover:text-purple-600 transition-colors">
-              <User className="h-6 w-6" />
-              <span className="text-sm font-medium">Profile</span>
+            {/* Login */}
+            <button
+              onClick={() => { setAuthMode('login'); setIsAuthOpen(true); }}
+              className="hidden md:flex items-center justify-center space-x-2 px-3 py-1.5 rounded-md border border-transparent text-gray-700 hover:bg-gray-100 focus:outline-none transition-colors"
+            >
+              <User className="h-5 w-5" />
+              <span className="text-sm font-medium">Login</span>
+            </button>
+
+            {/* Signup */}
+            <button
+              onClick={() => { setAuthMode('signup'); setIsAuthOpen(true); }}
+              className="hidden md:flex items-center justify-center space-x-2 px-3 py-1.5 rounded-md bg-emerald-600 text-white hover:bg-emerald-700 focus:outline-none transition-colors"
+            >
+              <User className="h-5 w-5" />
+              <span className="text-sm font-medium">Sign up</span>
             </button>
 
             {/* Wishlist */}
@@ -131,9 +149,13 @@ const Navbar: React.FC<NavbarProps> = ({ onCategorySelect, currentPage }) => {
 
           {/* Mobile Navigation Links */}
           <div className="px-4 py-2 space-y-2">
-            <button className="flex items-center space-x-2 w-full text-left py-2 text-gray-700 hover:text-purple-600">
+            <button onClick={() => { setAuthMode('login'); setIsAuthOpen(true); }} className="flex items-center justify-center space-x-2 w-full text-left py-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors">
               <User className="h-5 w-5" />
-              <span>Profile</span>
+              <span>Login</span>
+            </button>
+            <button onClick={() => { setAuthMode('signup'); setIsAuthOpen(true); }} className="w-full py-2 px-3 rounded-md bg-emerald-600 text-white flex items-center justify-center space-x-2 hover:bg-emerald-700 transition-colors">
+              <User className="h-5 w-5" />
+              <span>Sign up</span>
             </button>
             <button className="flex items-center space-x-2 w-full text-left py-2 text-gray-700 hover:text-purple-600">
               <Heart className="h-5 w-5" />
